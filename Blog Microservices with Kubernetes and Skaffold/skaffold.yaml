@@ -1,0 +1,89 @@
+# skaffold is used to rebuild images and copy the changed files
+# directly into the pod
+apiVersion: skaffold/v2alpha3
+
+kind: Config
+
+# Now we will tell it to check for kubernetes deployment
+
+deploy:
+  kubectl:
+    # Watch all the files inside the folder
+    manifests:
+      - ./infrastructure/kubernetes/*
+
+# Now the skaffold will apply these files and manage the objects
+# by these config files i.e create/delete ..
+
+build:
+  # Do not push to dockerhub
+  local:
+    push: false
+  artifacts:
+    # For Client
+    - image: [dockerID]client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          # Now this will sync the pod that is it will look
+          # for the files with the src and copy it directly
+          # inside the pods
+          # If any file is changed that is not in sync like
+          # package.json it will rebuild the project
+          # Now here something like nodemon is very
+          # helpful as the will restart the process if
+          # they see a change in file
+          - src: "src/**/*.js"
+            dest: .
+
+    # For Comments
+    - image: [dockerID]comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "*.js"
+
+    # for moderation
+    - image: [dockerID]moderation
+      context: moderation
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "*.js"
+
+    # for query
+    - image: [dockerID]query
+      context: query
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "*.js"
+
+    # for posts
+    - image: [dockerID]posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "*.js"
+
+    # for event bus
+    - image: [dockerID]event-bus
+      context: event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "*.js"

@@ -1,0 +1,56 @@
+# again specify the buckets from which you will select
+# the objects
+apiVersion: apps/v1
+
+# then kind of object
+kind: Deployment
+# Deployment is kind of a manager that manages pods
+
+metadata:
+  name: query-deployment
+
+spec:
+  replicas: 1
+  # the selector tells the deployment which pods it has to manage
+  # so in this case look for pods that has labels as app: query
+  selector:
+    matchLabels:
+      app: query
+  # then i am creating a template of the pod that i want to
+  # create . so in metadata i have to specify the labels
+  # so the deployment will manage them then i also need
+  # to specify the specs of the pod
+  template:
+    metadata:
+      labels:
+        app: query
+    spec:
+      containers:
+        - name: query
+          image: [dockerID]query
+
+# we can write a cluster ip service (see query-node-service.yaml )
+# inside the deployment file as there is a one to one mapping
+# b/w deployment and cluster ip ( i.e to allow communication b/w
+# pods) . we can also create a seperate file
+# to create a new yaml we use --- 3 dashes that seperates
+# yaml files
+
+---
+# Now select the bucket from which you want an object
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: query-cluster-ip-service
+
+spec:
+  selector:
+    app: query
+  type: ClusterIP
+  ports:
+    - name: query
+      protocol: TCP
+      port: 4002
+      targetPort: 4002

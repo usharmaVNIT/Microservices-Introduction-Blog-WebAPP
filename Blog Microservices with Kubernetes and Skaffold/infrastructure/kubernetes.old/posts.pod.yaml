@@ -1,0 +1,31 @@
+# using kubernetes we can create lot of things like
+# Pods , services , etc . we call them objects
+# apiVersion says to kubernetes to look at the pool of
+# of objects from which we can create different objects
+# in this case look inside version 1
+apiVersion: v1
+
+# Then we specify which type of object we want to create
+# from the pool . so in this case we want a POD
+# Pod will wrap up a container
+
+kind: Pod
+
+# Meta data about the object
+
+metadata:
+  name: posts
+
+# List of specifications about the specified object that we
+# want to create
+# spec - specification
+# this is the precise definition as to what will go
+# inside this pod and how the pod should behave
+
+spec:
+  containers:
+    # the (-) entity means we want an array entity
+    # in this case we want to create only 1 container
+    - name: posts
+      image: [dockerID]posts:0.0.1
+

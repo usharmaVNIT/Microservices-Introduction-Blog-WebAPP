@@ -1,0 +1,33 @@
+# Services are of 4 types
+# 1. Cluster IP - Communication b/w pods
+# 2. Node Port - Communication b/w pod and outside world
+# 3. Load Balancer - Communication b/w pod and outside world ( group of pods)
+# 4.External Name - Advanced
+
+# here i am just exposing a pod to outside world
+# correct way to do so is to use a load balancer but
+# since this is for test purposes we will create a node
+# service
+
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: posts-node-service
+# Now specifying the specifications of the service
+spec:
+  # type of service
+  type: NodePort
+  # then selector will select all the pods with matching labels
+  selector:
+    app: posts
+  # then we expose port with protocols and an alias
+  ports:
+    - name: posts
+      protocol: TCP
+      # this is the port for the node port service and then it will automatically assign
+      # a nodePort that will be used for access finally
+      port: 4000
+      # This is the port for the container
+      targetPort: 4000
